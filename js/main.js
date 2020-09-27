@@ -1,9 +1,11 @@
 'use strict';
-const PIN = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
+const map = document.querySelector(`.map__pins`);
+const pin = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 const PIN_PARAMS = {
   'width': 50,
   'height': 70
 };
+const AD_NUMBER = 8;
 
 const AD = {
   'TYPE': [`palace`, `flat`, `house`, `bungalow`],
@@ -16,27 +18,21 @@ const AD = {
   ]
 };
 
-const AD_NUMBER = 8;
-
-const MAP = document.querySelector(`.map__pins`);
-MAP.classList.remove(`map--faded`);
-
-const getRandomInt = function (min, max) {
+const getRandomInt = function (min = 0, max = 100) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
 const getRandomElement = (arr) => {
-  return arr[getRandomInt(0, arr.length - 1)];
+  return arr[getRandomInt(0, arr.length)];
 };
 
-const getRandomLocation = (pin, field) => {
-  return getRandomInt(pin.width / 2, field.clientWidth - (pin.width / 2));
+const getRandomLocation = (pinElement, field) => {
+  return getRandomInt(pinElement.width / 2, field.clientWidth - (pinElement.width / 2));
 };
 
 const getRandomLengthString = (arr) => {
-  const result = [];
-  result.push(arr.slice(0, Math.ceil(Math.random() * arr.length)));
-  return result;
+  const MIN_NUMBER_OF_ELEMENTS = 1;
+  return arr.slice(0, getRandomInt(MIN_NUMBER_OF_ELEMENTS, arr.length));
 };
 
 const generateAd = function (adCount) {
@@ -48,7 +44,7 @@ const generateAd = function (adCount) {
       },
       'offer': {
         'title': `Some Text`,
-        'address': `${getRandomLocation(PIN_PARAMS, MAP)}px`,
+        'address': `${getRandomLocation(PIN_PARAMS, map)}px`,
         'price': 100,
         'type': getRandomElement(AD.TYPE),
         'rooms': 2,
@@ -60,7 +56,7 @@ const generateAd = function (adCount) {
         'photos': getRandomLengthString(AD.PHOTOS)
       },
       'location': {
-        'x': `${getRandomLocation(PIN_PARAMS, MAP)}px`,
+        'x': `${getRandomLocation(PIN_PARAMS, map)}px`,
         'y': `${getRandomInt(130, 630)}px`
       }
 
@@ -70,7 +66,7 @@ const generateAd = function (adCount) {
 };
 
 const renderPin = function (obj) {
-  const pinElement = PIN.cloneNode(true);
+  const pinElement = pin.cloneNode(true);
   const pinImage = pinElement.querySelector(`img`);
 
   pinElement.style.left = obj.location.x;
@@ -83,11 +79,12 @@ const renderPin = function (obj) {
 const showPins = function (pins) {
   const fragment = document.createDocumentFragment();
 
-  for (let pin of pins) {
-    fragment.appendChild(renderPin(pin));
+  for (let pinItem of pins) {
+    fragment.appendChild(renderPin(pinItem));
   }
   return fragment;
 };
 
 const adList = generateAd(AD_NUMBER);
-MAP.appendChild(showPins(adList));
+map.appendChild(showPins(adList));
+map.classList.remove(`map--faded`);

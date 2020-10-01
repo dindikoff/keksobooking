@@ -28,7 +28,7 @@ const PIN_PARAMS = {
 const KEYS = {
   'ENTER': `Enter`,
   'MOUSE_LEFT_BUTTON': 1
-}
+};
 
 // const getRandomInt = function (min = 0, max = 100) {
 //   return Math.floor(Math.random() * (max - min)) + min;

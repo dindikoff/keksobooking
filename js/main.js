@@ -25,11 +25,6 @@ const PIN_PARAMS = {
 //   ]
 // };
 
-const KEYS = {
-  'ENTER': `Enter`,
-  'MOUSE_LEFT_BUTTON': 1
-};
-
 // const getRandomInt = function (min = 0, max = 100) {
 //   return Math.floor(Math.random() * (max - min)) + min;
 // };
@@ -128,14 +123,14 @@ const turnOnPage = () => {
 };
 
 mainPin.addEventListener(`mousedown`, (evt) => {
-  if (evt.buttons === KEYS.MOUSE_LEFT_BUTTON) {
+  if (evt.buttons === window.utils.Key.MOUSE_LEFT_BUTTON) {
     turnOnPage();
     changeAddressInput();
   }
 });
 
 mainPin.addEventListener(`keydown`, function (evt) {
-  if (evt.key === KEYS.ENTER) {
+  if (evt.key === window.utils.Key.ENTER) {
     turnOnPage();
     changeAddressInput();
   }

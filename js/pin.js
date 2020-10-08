@@ -4,12 +4,11 @@
   const pin = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
   const renderPin = function (obj) {
-    const pinElement = pin.cloneNode(true);
+    let pinElement = pin.cloneNode(true);
     const pinImage = pinElement.querySelector(`img`);
-
-    pinElement.style.left = obj.location.x;
-    pinElement.style.top = obj.location.y;
-    pinImage.src = obj.author.name;
+    pinElement.style.left = `${obj.location.x}px`;
+    pinElement.style.top = `${obj.location.y}px`;
+    pinImage.src = obj.author.avatar;
 
     return pinElement;
   };

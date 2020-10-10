@@ -24,12 +24,33 @@
     return arr.slice(0, getRandomInt(MIN_NUMBER_OF_ELEMENTS, arr.length));
   };
 
+  const showListElements = (list, cb) => {
+    const fragment = document.createDocumentFragment();
+
+    for (let el of list) {
+      fragment.append(cb(el));
+    }
+
+    return fragment;
+  };
+
+  const endingsGenerator = (number, titles) => {
+    const decCache = [];
+    const decCases = [2, 0, 1, 1, 1, 2];
+    if (!decCache[number]) {
+      decCache[number] = number % 100 > 4 && number % 100 < 20 ? 2 : decCases[Math.min(number % 10, 5)];
+    }
+    return `${number} ${titles[decCache[number]]}`;
+  };
+
   window.utils = {
     Key,
     getRandomInt,
     getRandomElement,
     getRandomLocation,
-    getRandomLengthString
+    getRandomLengthString,
+    showListElements,
+    endingsGenerator
   };
 
 })();

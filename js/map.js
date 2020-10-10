@@ -2,16 +2,7 @@
 
 (function () {
   const map = document.querySelector(`.map__pins`);
-
-  const successHandler = (pins) => {
-    const fragment = document.createDocumentFragment();
-
-    for (let pinItem of pins) {
-      fragment.appendChild(window.pin.renderPin(pinItem));
-    }
-
-    map.appendChild(fragment);
-  };
+  const mapFilter = document.querySelector(`.map__filters-container`);
 
   const errorHandler = (errorText) => {
     const node = document.createElement(`div`);
@@ -32,5 +23,28 @@
     document.body.insertAdjacentElement(`afterbegin`, node);
   };
 
-  window.backend.load(successHandler, errorHandler);
+  const showPins = () => {
+    const successHandler = (pins) => {
+      const fragment = document.createDocumentFragment();
+      for (let pinItem of pins) {
+        fragment.appendChild(window.pin.renderPin(pinItem));
+      }
+
+      map.appendChild(fragment);
+    };
+
+    window.backend.load(successHandler, errorHandler);
+  };
+
+  showPins();
+
+  const showCards = (cardNumber) => {
+    const successHandler = (cards) => {
+      mapFilter.insertAdjacentElement(`beforebegin`, window.card.renderCard(cards[cardNumber]));
+    };
+
+    window.backend.load(successHandler, errorHandler);
+  };
+
+  showCards(0);
 })();

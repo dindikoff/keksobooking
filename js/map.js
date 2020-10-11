@@ -38,7 +38,7 @@
 
   showPins();
 
-  const showCards = (cardNumber) => {
+  const addCard = (cardNumber) => {
     const successHandler = (cards) => {
       mapFilter.insertAdjacentElement(`beforebegin`, window.card.renderCard(cards[cardNumber]));
     };
@@ -46,5 +46,22 @@
     window.backend.load(successHandler, errorHandler);
   };
 
-  showCards(0);
+  const showCard = () => {
+    map.addEventListener(`click`, (evt) => {
+      const mapPins = document.querySelectorAll(`.map__pin`);
+      for (let i = 0; i < mapPins.length; i++) {
+        if (evt.target.parentNode.className === `map__pin map__pin--main`) {
+          return;
+        } else {
+          if (evt.target.parentNode === mapPins[i]) {
+            window.utils.deleteNode(`.map__filters-container`, `.map__card`);
+            addCard(i - 1);
+          }
+        }
+      }
+    });
+  };
+
+  showCard();
+
 })();

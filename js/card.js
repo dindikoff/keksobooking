@@ -38,6 +38,7 @@
     const cardFeatures = cardEl.querySelector(`.popup__features`);
     const cardDescription = cardEl.querySelector(`.popup__description`);
     const cardPictures = cardEl.querySelector(`.popup__photos`);
+    const closeButton = cardEl.querySelector(`.popup__close`);
 
     cardImage.src = obj.author.avatar;
     cardAddress.textContent = obj.offer.address;
@@ -67,6 +68,10 @@
     }));
 
     cardTitle.textContent = obj.offer.title;
+
+    closeButton.addEventListener(`click`, () => {
+      window.utils.deleteNode(`.map__filters-container`, `.map__card`);
+    });
 
     return cardEl;
   };

@@ -43,6 +43,20 @@
     return `${number} ${titles[decCache[number]]}`;
   };
 
+  const deleteNode = (parentClass, nodeClass) => {
+    const parentEl = document.querySelector(parentClass);
+    parentEl.innerHTML = ``;
+    const mapCard = document.querySelector(nodeClass);
+    if (mapCard) {
+      mapCard.remove();
+    }
+  };
+
+  const hasExtension = (inputID, exts) => {
+    const fileName = inputID.value;
+    return (new RegExp(`(` + exts.join(`|`).replace(/\./g, `\\.`) + `)$`)).test(fileName);
+  };
+
   window.utils = {
     Key,
     getRandomInt,
@@ -50,7 +64,9 @@
     getRandomLocation,
     getRandomLengthString,
     showListElements,
-    endingsGenerator
+    endingsGenerator,
+    deleteNode,
+    hasExtension
   };
 
 })();

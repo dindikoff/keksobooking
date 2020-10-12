@@ -4,6 +4,7 @@
 
   const Key = {
     'ENTER': `Enter`,
+    'ESC': `Escape`,
     'MOUSE_LEFT_BUTTON': 1
   };
 

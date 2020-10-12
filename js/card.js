@@ -25,6 +25,17 @@
     return typeIs;
   };
 
+  const closeModal = () => {
+    window.utils.deleteNode(`.map__filters-container`, `.map__card`);
+    document.removeEventListener(`keydown`, onEscPress);
+  };
+
+  const onEscPress = (evt) => {
+    if (evt.key === window.utils.Key.ESC) {
+      closeModal();
+    }
+  };
+
   const renderCard = (obj) => {
     const cardEl = card.cloneNode(true);
 
@@ -69,9 +80,8 @@
 
     cardTitle.textContent = obj.offer.title;
 
-    closeButton.addEventListener(`click`, () => {
-      window.utils.deleteNode(`.map__filters-container`, `.map__card`);
-    });
+    closeButton.addEventListener(`click`, closeModal);
+    document.addEventListener(`keydown`, onEscPress);
 
     return cardEl;
   };

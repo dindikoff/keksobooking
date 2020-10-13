@@ -5,6 +5,13 @@
   const formSubmit = document.querySelector(`.ad-form__submit`);
   const addressInput = adForm.querySelector(`#address`);
   const mainPin = document.querySelector(`.map__pin--main`);
+  const timeIn = document.querySelector(`#timein`);
+  const timeOut = document.querySelector(`#timeout`);
+
+  const PIN_PARAMS = {
+    'width': 50,
+    'height': 70
+  };
 
   const disabledForm = (block, isDisabled = true) => {
     for (let field of block.children) {
@@ -17,8 +24,8 @@
   };
 
   const changeAddressInput = () => {
-    const getLeft = mainPin.offsetLeft + (window.data.PIN_PARAMS.width / 2);
-    const getTop = mainPin.offsetTop + window.data.PIN_PARAMS.height;
+    const getLeft = mainPin.offsetLeft + (PIN_PARAMS.width / 2);
+    const getTop = mainPin.offsetTop + PIN_PARAMS.height;
 
     addressInput.value = `${getLeft}, ${getTop}`;
   };
@@ -47,7 +54,44 @@
 
   };
 
-  formSubmit.addEventListener(`click`, checkRoomValidity);
+  const typeOfHouses = () => {
+    const roomType = document.querySelector(`#type`);
+    const roomPrice = document.querySelector(`#price`);
+
+    const typeRules = {
+      'bungalow': 0,
+      'flat': 1000,
+      'house': 5000,
+      'palace': 10000
+    };
+
+    roomPrice.setAttribute(`min`, typeRules[roomType.value]);
+  };
+
+  timeIn.addEventListener(`change`, () => {
+    timeOut.value = timeIn.value;
+  });
+
+  timeOut.addEventListener(`change`, () => {
+    timeIn.value = timeOut.value;
+  });
+
+  const checkImage = (fileInput) => {
+    const placeImage = document.querySelector(fileInput);
+    if (!window.utils.hasExtension(placeImage, [`.jpg`, `.gif`, `.png`])) {
+      placeImage.setCustomValidity(`Загрузите изображение в формате .jpg, .gif или .png`);
+    } else {
+      placeImage.setCustomValidity(``);
+    }
+  };
+
+  formSubmit.addEventListener(`click`, () => {
+    checkRoomValidity();
+    typeOfHouses();
+    checkImage(`#images`);
+    checkImage(`#avatar`);
+  });
+
   addressInput.value = `${mainPin.offsetLeft}, ${mainPin.offsetTop}`;
 
   window.form = {

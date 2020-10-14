@@ -3,47 +3,27 @@
 (function () {
   const map = document.querySelector(`.map__pins`);
   const mapFilter = document.querySelector(`.map__filters-container`);
+  const mapFilters = document.querySelector(`.map__filters`);
 
-  const errorHandler = (errorText) => {
-    const node = document.createElement(`div`);
-    node.style.position = `fixed`;
-    node.style.top = `40%`;
-    node.style.left = `50%`;
-    node.style.width = `300px`;
-    node.style.height = `200px`;
-    node.style.marginLeft = `-150px`;
-    node.style.padding = `30px`;
-    node.style.fontSize = `30px`;
-    node.style.backgroundColor = `red`;
-    node.style.zIndex = `100`;
-    node.style.color = `#fff`;
-    node.style.textAlign = `center`;
+  let pins = [];
 
-    node.textContent = errorText;
-    document.body.insertAdjacentElement(`afterbegin`, node);
+  const updatePins = () => {
+    window.utils.removeList(`.map__pin`, () => {
+      window.utils.deleteNode(`.map__card`);
+    });
+    window.filter.housingTypeFilter(pins);
+
+    window.form.disabledForm(mapFilters, false);
   };
 
-  const showPins = () => {
-    const successHandler = (pins) => {
-      const fragment = document.createDocumentFragment();
-      for (let pinItem of pins) {
-        fragment.appendChild(window.pin.renderPin(pinItem));
-      }
-
-      map.appendChild(fragment);
-    };
-
-    window.backend.load(successHandler, errorHandler);
+  const successHandler = (data) => {
+    pins = data;
   };
 
-  showPins();
+  window.backend.load(successHandler, window.utils.errorHandler);
 
   const addCard = (cardNumber) => {
-    const successHandler = (cards) => {
-      mapFilter.insertAdjacentElement(`beforebegin`, window.card.renderCard(cards[cardNumber]));
-    };
-
-    window.backend.load(successHandler, errorHandler);
+    mapFilter.insertAdjacentElement(`beforebegin`, window.card.renderCard(pins[cardNumber]));
   };
 
   const showCard = (evtElement) => {
@@ -54,7 +34,7 @@
         return;
       } else {
         if (evtElement.target === mapPins[i] || evtElement.target.parentNode === mapPins[i]) {
-          window.utils.deleteNode(`.map__filters-container`, `.map__card`);
+          window.utils.deleteNode(`.map__card`);
           addCard(i - 1);
         }
       }
@@ -62,5 +42,9 @@
   };
 
   map.addEventListener(`click`, showCard);
+
+  window.map = {
+    updatePins
+  };
 
 })();

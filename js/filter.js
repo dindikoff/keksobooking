@@ -24,10 +24,12 @@
 
     window.pin.renderPinsElements(houseFilterMap[houseOptions.value]);
 
-    houseOptions.addEventListener(`change`, (evt) => {
-      window.map.updatePins();
-      window.pin.renderPinsElements(houseFilterMap[evt.target.value]);
+    const update = window.debounce((evt) => {
+      window.debounce(window.map.updatePins());
+      window.debounce(window.pin.renderPinsElements(houseFilterMap[evt.target.value]));
     });
+
+    houseOptions.addEventListener(`change`, update);
   };
 
   window.filter = {

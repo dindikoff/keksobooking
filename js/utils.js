@@ -44,18 +44,43 @@
     return `${number} ${titles[decCache[number]]}`;
   };
 
-  const deleteNode = (parentClass, nodeClass) => {
-    const parentEl = document.querySelector(parentClass);
-    parentEl.innerHTML = ``;
+  const deleteNode = (nodeClass) => {
     const mapCard = document.querySelector(nodeClass);
     if (mapCard) {
       mapCard.remove();
     }
   };
 
+  const removeList = (domList, cb) => {
+    const mapList = document.querySelectorAll(domList);
+    cb();
+    for (let i = 1; i < mapList.length; i++) {
+      mapList[i].remove();
+    }
+  };
+
   const hasExtension = (inputID, exts) => {
     const fileName = inputID.value;
     return (new RegExp(`(` + exts.join(`|`).replace(/\./g, `\\.`) + `)$`)).test(fileName);
+  };
+
+  const errorHandler = (errorText) => {
+    const node = document.createElement(`div`);
+    node.style.position = `fixed`;
+    node.style.top = `40%`;
+    node.style.left = `50%`;
+    node.style.width = `300px`;
+    node.style.height = `200px`;
+    node.style.marginLeft = `-150px`;
+    node.style.padding = `30px`;
+    node.style.fontSize = `30px`;
+    node.style.backgroundColor = `red`;
+    node.style.zIndex = `100`;
+    node.style.color = `#fff`;
+    node.style.textAlign = `center`;
+
+    node.textContent = errorText;
+    document.body.insertAdjacentElement(`afterbegin`, node);
   };
 
   window.utils = {
@@ -67,7 +92,9 @@
     showListElements,
     endingsGenerator,
     deleteNode,
-    hasExtension
+    hasExtension,
+    errorHandler,
+    removeList
   };
 
 })();

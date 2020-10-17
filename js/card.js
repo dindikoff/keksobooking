@@ -3,30 +3,15 @@
 (function () {
   const card = document.querySelector(`#card`).content.querySelector(`.popup`);
 
-  const offerType = (type) => {
-    let typeIs;
-    switch (type) {
-      case `flat`:
-        typeIs = `Квартира`;
-        break;
-
-      case `bungalow`:
-        typeIs = `Бунгало`;
-        break;
-
-      case `house`:
-        typeIs = `Дом`;
-        break;
-
-      case `palace`:
-        typeIs = `Дворец`;
-        break;
-    }
-    return typeIs;
+  const valueToTypeOffer = {
+    'flat': `Квартира`,
+    'bungalow': `Бунгало`,
+    'house': `Дом`,
+    'palace': `Дворец`
   };
 
   const closeModal = () => {
-    window.utils.deleteNode(`.map__filters-container`, `.map__card`);
+    window.utils.deleteNode(`.map__card`);
     document.removeEventListener(`keydown`, onEscPress);
   };
 
@@ -54,7 +39,7 @@
     cardImage.src = obj.author.avatar;
     cardAddress.textContent = obj.offer.address;
     cardPrice.textContent = `${obj.offer.price}₽/ночь`;
-    cardType.textContent = offerType(obj.offer.type);
+    cardType.textContent = valueToTypeOffer[obj.offer.type];
     cardRoomCapacity.textContent = `${window.utils.endingsGenerator(obj.offer.rooms, [`комната`, `комнаты`, `комнат`])}
     для ${window.utils.endingsGenerator(obj.offer.guests, [`гостя`, `гостей`, `гостей`])}`;
     cardRoomTime.textContent = `Заезд после ${obj.offer.checkin}, выезд до ${obj.offer.checkout}`;

@@ -4,7 +4,6 @@ const mapFilters = document.querySelector(`.map__filters`);
 const mainPin = document.querySelector(`.map__pin--main`);
 const map = document.querySelector(`.map__pins`);
 
-
 const turnOfPage = () => {
   window.form.disabledForm(adForm);
   window.form.disabledForm(mapFilters);
@@ -14,9 +13,9 @@ const turnOfPage = () => {
 
 const turnOnPage = () => {
   window.form.disabledForm(adForm, false);
-  window.form.disabledForm(mapFilters, false);
   map.classList.remove(`map--faded`);
   adForm.classList.remove(`ad-form--disabled`);
+  window.map.updatePins();
 };
 
 mainPin.addEventListener(`mousedown`, (evt) => {

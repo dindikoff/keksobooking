@@ -8,7 +8,7 @@
   const timeIn = document.querySelector(`#timein`);
   const timeOut = document.querySelector(`#timeout`);
 
-  const PIN_PARAMS = {
+  const PIN_PARAM = {
     'width': 50,
     'height': 70
   };
@@ -24,8 +24,8 @@
   };
 
   const changeAddressInput = () => {
-    const getLeft = mainPin.offsetLeft + (PIN_PARAMS.width / 2);
-    const getTop = mainPin.offsetTop + PIN_PARAMS.height;
+    const getLeft = mainPin.offsetLeft + (PIN_PARAM.width / 2);
+    const getTop = mainPin.offsetTop + PIN_PARAM.height;
 
     addressInput.value = `${getLeft}, ${getTop}`;
   };
@@ -34,14 +34,14 @@
     const roomNumber = document.querySelector(`#room_number`);
     const roomCapacity = document.querySelector(`#capacity`);
 
-    const roomRules = {
+    const roomRulesMap = {
       '1': [1],
       '2': [1, 2],
       '3': [1, 2, 3],
       '100': [0]
     };
 
-    if (roomRules[roomNumber.value].includes(parseInt(roomCapacity.value, 10))) {
+    if (roomRulesMap[roomNumber.value].includes(parseInt(roomCapacity.value, 10))) {
       roomNumber.setCustomValidity(``);
     } else {
       roomNumber.setCustomValidity(`

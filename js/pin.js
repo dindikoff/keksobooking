@@ -2,6 +2,7 @@
 
 (function () {
   const pin = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
+  const map = document.querySelector(`.map__pins`);
 
   const renderPin = function (obj) {
     const pinElement = pin.cloneNode(true);
@@ -13,8 +14,21 @@
     return pinElement;
   };
 
+  const renderPinsElements = (pins) => {
+    const MAX_AD_NUMBER = 5;
+    const theNumber = pins.length < MAX_AD_NUMBER ? pins.length : MAX_AD_NUMBER;
+    const fragment = document.createDocumentFragment();
+
+    for (let pinItem = 0; pinItem < theNumber; pinItem++) {
+      fragment.appendChild(renderPin(pins[pinItem]));
+    }
+
+    map.appendChild(fragment);
+  };
+
   window.pin = {
-    renderPin
+    renderPin,
+    renderPinsElements
   };
 
 })();

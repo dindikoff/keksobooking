@@ -8,6 +8,11 @@
     'MOUSE_LEFT_BUTTON': 1
   };
 
+  const PIN_PARAM = {
+    'width': 50,
+    'height': 70
+  };
+
   const getRandomInt = function (min = 0, max = 100) {
     return Math.floor(Math.random() * (max - min)) + min;
   };
@@ -83,8 +88,18 @@
     document.body.insertAdjacentElement(`afterbegin`, node);
   };
 
+  const getElementCords = (element, paramsWidth, paramsHeight) => {
+    const elementCords = {
+      left: element.offsetLeft + (paramsWidth / 2),
+      top: element.offsetTop + paramsHeight
+    };
+
+    return elementCords;
+  };
+
   window.utils = {
     Key,
+    PIN_PARAM,
     getRandomInt,
     getRandomElement,
     getRandomLocation,
@@ -94,7 +109,8 @@
     deleteNode,
     hasExtension,
     errorHandler,
-    removeList
+    removeList,
+    getElementCords
   };
 
 })();

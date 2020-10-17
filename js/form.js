@@ -8,11 +8,6 @@
   const timeIn = document.querySelector(`#timein`);
   const timeOut = document.querySelector(`#timeout`);
 
-  const PIN_PARAM = {
-    'width': 50,
-    'height': 70
-  };
-
   const disabledForm = (block, isDisabled = true) => {
     for (let field of block.children) {
       if (isDisabled) {
@@ -24,10 +19,8 @@
   };
 
   const changeAddressInput = () => {
-    const getLeft = mainPin.offsetLeft + (PIN_PARAM.width / 2);
-    const getTop = mainPin.offsetTop + PIN_PARAM.height;
-
-    addressInput.value = `${getLeft}, ${getTop}`;
+    const pinCords = window.utils.getElementCords(mainPin, window.utils.PIN_PARAM.width, window.utils.PIN_PARAM.height);
+    addressInput.value = `${pinCords.left}, ${pinCords.top}`;
   };
 
   const checkRoomValidity = () => {

@@ -4,12 +4,18 @@ const mapFilters = document.querySelector(`.map__filters`);
 const mainPin = document.querySelector(`.map__pin--main`);
 const map = document.querySelector(`.map__pins`);
 const mapOverlay = document.querySelector(`.map__overlay`);
+const successElement = document.querySelector(`#success`).content.querySelector(`.success`);
+const errorElement = document.querySelector(`#error`).content.querySelector(`.error`);
+const resetButton = document.querySelector(`.ad-form__reset`);
+const submitButton = document.querySelector(`.ad-form__submit`);
 
-const turnOfPage = () => {
+const turnOffPage = () => {
+  window.card.deleteCards(); // Delete List
   window.form.disabledForm(adForm);
   window.form.disabledForm(mapFilters);
   map.classList.add(`map--faded`);
   adForm.classList.add(`ad-form--disabled`);
+  adForm.reset();
 };
 
 const turnOnPage = () => {
@@ -52,10 +58,36 @@ window.move.doMove(mainPin, () => {
 });
 
 mainPin.addEventListener(`keydown`, function (evt) {
+
   if (evt.key === window.utils.Key.ENTER) {
     turnOnPage();
     window.form.changeAddressInput();
   }
 });
 
-turnOfPage();
+const onLoad = () => {
+  window.utils.showServerStatus(successElement, adForm);
+  turnOffPage();
+};
+
+const onError = () => {
+  window.utils.showServerStatus(errorElement, adForm);
+};
+
+adForm.addEventListener(`submit`, (evt) => {
+  window.form.checkRoomValidity();
+  window.form.typeOfHouses();
+  window.form.checkImage(`#images`);
+  window.form.checkImage(`#avatar`);
+  submitButton.disabled = true;
+  window.backend.send(new FormData(adForm), onLoad, onError);
+  evt.preventDefault();
+});
+
+resetButton.addEventListener(`click`, () => {
+  turnOffPage();
+});
+
+
+turnOffPage();
+

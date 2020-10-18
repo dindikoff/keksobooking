@@ -2,7 +2,6 @@
 
 (function () {
   const adForm = document.querySelector(`.ad-form`);
-  const formSubmit = document.querySelector(`.ad-form__submit`);
   const addressInput = adForm.querySelector(`#address`);
   const mainPin = document.querySelector(`.map__pin--main`);
   const timeIn = document.querySelector(`#timein`);
@@ -78,18 +77,38 @@
     }
   };
 
-  formSubmit.addEventListener(`click`, () => {
-    checkRoomValidity();
-    typeOfHouses();
-    checkImage(`#images`);
-    checkImage(`#avatar`);
-  });
+  // const onLoad = () => {
+  //   // const successEl = successElement.cloneNode(true);
+  //   // adForm.append(successEl);
+
+  //   console.log("IT WORKS");
+  //   window.main.turnOffPage();
+  // };
+
+  // const onError = () => {
+  //   console.log("IT DOESNT WORK");
+  // };
+
+  // adForm.addEventListener(`submit`, (evt) => {
+  //   checkRoomValidity();
+  //   typeOfHouses();
+  //   checkImage(`#images`);
+  //   checkImage(`#avatar`);
+
+  //   window.backend.send(new FormData(adForm), onLoad, onError);
+  //   evt.preventDefault();
+  // });
+
 
   addressInput.value = `${mainPin.offsetLeft}, ${mainPin.offsetTop}`;
 
   window.form = {
     disabledForm,
-    changeAddressInput
+    changeAddressInput,
+    checkRoomValidity,
+    typeOfHouses,
+    checkImage
+
   };
 
 })();

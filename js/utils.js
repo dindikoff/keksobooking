@@ -97,6 +97,43 @@
     return elementCords;
   };
 
+  const showServerStatus = (element, placeToShow) => {
+
+    const successEl = element.cloneNode(true);
+    const button = successEl.querySelector(`.error__button`);
+    const submitButton = document.querySelector(`.ad-form__submit`);
+    placeToShow.append(successEl);
+
+    const closeByClick = (evt) => {
+      if (evt.target.parentNode !== successEl) {
+        successEl.remove();
+        submitButton.disabled = false;
+      }
+
+      document.removeEventListener(`keydown`, closeByEsc);
+    };
+
+    const closeByEsc = (evt) => {
+      if (evt.key === window.utils.Key.ESC) {
+        successEl.remove();
+        submitButton.disabled = false;
+      }
+
+      document.removeEventListener(`keydown`, closeByEsc);
+      document.removeEventListener(`click`, closeByClick);
+    };
+
+    if (button) {
+      button.addEventListener(`click`, () => {
+        successEl.remove();
+        submitButton.disabled = false;
+      });
+    }
+
+    document.addEventListener(`keydown`, closeByEsc);
+    successEl.addEventListener(`click`, closeByClick);
+  };
+
   window.utils = {
     Key,
     PIN_PARAM,
@@ -110,7 +147,8 @@
     hasExtension,
     errorHandler,
     removeList,
-    getElementCords
+    getElementCords,
+    showServerStatus
   };
 
 })();

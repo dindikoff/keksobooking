@@ -7,9 +7,7 @@
   let pins = [];
 
   const updatePins = () => {
-    window.utils.removeList(`.map__pin`, () => {
-      window.utils.deleteNode(`.map__card`);
-    });
+    window.card.deleteCards();
     window.filter.housingTypeFilter(pins);
 
     window.form.disabledForm(mapFilters, false);

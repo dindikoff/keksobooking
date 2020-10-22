@@ -77,29 +77,6 @@
     }
   };
 
-  // const onLoad = () => {
-  //   // const successEl = successElement.cloneNode(true);
-  //   // adForm.append(successEl);
-
-  //   console.log("IT WORKS");
-  //   window.main.turnOffPage();
-  // };
-
-  // const onError = () => {
-  //   console.log("IT DOESNT WORK");
-  // };
-
-  // adForm.addEventListener(`submit`, (evt) => {
-  //   checkRoomValidity();
-  //   typeOfHouses();
-  //   checkImage(`#images`);
-  //   checkImage(`#avatar`);
-
-  //   window.backend.send(new FormData(adForm), onLoad, onError);
-  //   evt.preventDefault();
-  // });
-
-
   addressInput.value = `${mainPin.offsetLeft}, ${mainPin.offsetTop}`;
 
   window.form = {

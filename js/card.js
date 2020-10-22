@@ -78,6 +78,8 @@
     for (let i = 0; i < mapPins.length; i++) {
       if (evtElement.target.parentNode.className === `map__pin map__pin--main`) {
         return;
+      } else if (evtElement.target.className === `map__pin map__pin--main`) {
+        return;
       } else {
         if (evtElement.target === mapPins[i] || evtElement.target.parentNode === mapPins[i]) {
           window.utils.deleteNode(`.map__card`);
@@ -87,10 +89,17 @@
     }
   };
 
+  const deleteCards = () => {
+    window.utils.removeList(`.map__pin`, () => {
+      window.utils.deleteNode(`.map__card`);
+    });
+  };
+
   map.addEventListener(`click`, showCard);
 
   window.card = {
-    renderCard
+    renderCard,
+    deleteCards
   };
 
 })();

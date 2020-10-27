@@ -135,12 +135,8 @@
   };
 
   const contains = (where, what) => {
-    for (let i = 0; i < what.length; i++) {
-      if (where.indexOf(what[i]) === -1) {
-        return false;
-      }
-    }
-    return true;
+    const found = what.every((r)=> where.includes(r));
+    return found;
   };
 
   window.utils = {

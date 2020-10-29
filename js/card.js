@@ -3,6 +3,7 @@
 (function () {
   const card = document.querySelector(`#card`).content.querySelector(`.popup`);
   const map = document.querySelector(`.map__pins`);
+  const mapFilter = document.querySelector(`.map__filters-container`);
 
   const valueToTypeOffer = {
     'flat': `Квартира`,
@@ -73,20 +74,18 @@
   };
 
   const showCard = (evtElement) => {
-    const mapPins = document.querySelectorAll(`.map__pin`);
+    const mapPins = document.querySelectorAll(`.map__pin:not(.map__pin--main)`);
 
     for (let i = 0; i < mapPins.length; i++) {
-      if (evtElement.target.parentNode.className === `map__pin map__pin--main`) {
-        return;
-      } else if (evtElement.target.className === `map__pin map__pin--main`) {
-        return;
-      } else {
-        if (evtElement.target === mapPins[i] || evtElement.target.parentNode === mapPins[i]) {
-          window.utils.deleteNode(`.map__card`);
-          window.map.addCard(i - 1);
-        }
+      if (evtElement.target === mapPins[i] || evtElement.target.parentNode === mapPins[i]) {
+        window.utils.deleteNode(`.map__card`);
+        addCard(i);
       }
     }
+  };
+
+  const addCard = (cardNumber) => {
+    mapFilter.insertAdjacentElement(`beforebegin`, window.card.renderCard(window.state[cardNumber]));
   };
 
   const deleteCards = () => {

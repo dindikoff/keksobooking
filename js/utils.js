@@ -134,6 +134,11 @@
     successEl.addEventListener(`click`, closeByClick);
   };
 
+  const contains = (where, what) => {
+    const found = what.every((r)=> where.includes(r));
+    return found;
+  };
+
   window.utils = {
     Key,
     PIN_PARAM,
@@ -148,7 +153,8 @@
     errorHandler,
     removeList,
     getElementCords,
-    showServerStatus
+    showServerStatus,
+    contains
   };
 
 })();

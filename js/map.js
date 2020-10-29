@@ -2,13 +2,12 @@
 
 (function () {
   const mapFilters = document.querySelector(`.map__filters`);
-  const mapFilter = document.querySelector(`.map__filters-container`);
 
   let pins = [];
 
   const updatePins = () => {
     window.card.deleteCards();
-    window.filter.housingTypeFilter(pins);
+    window.filter.getFilterInfo(pins);
 
     window.form.disabledForm(mapFilters, false);
   };
@@ -19,13 +18,8 @@
 
   window.backend.load(successHandler, window.utils.errorHandler);
 
-  const addCard = (cardNumber) => {
-    mapFilter.insertAdjacentElement(`beforebegin`, window.card.renderCard(pins[cardNumber]));
-  };
-
   window.map = {
     updatePins,
-    addCard
   };
 
 })();

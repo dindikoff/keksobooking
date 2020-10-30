@@ -1,7 +1,5 @@
 'use strict';
 
-(function () {
-
   const Key = {
     'ENTER': `Enter`,
     'ESC': `Escape`,
@@ -157,4 +155,3 @@
     contains
   };
 
-})();

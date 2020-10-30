@@ -1,6 +1,5 @@
 'use strict';
 
-(function () {
   const Server = {
     GET_URL: `https://21.javascript.pages.academy/keksobooking/data`,
     POST_URL: `https://21.javascript.pages.academy/keksobooking`
@@ -78,5 +77,3 @@
     load,
     send
   };
-
-})();

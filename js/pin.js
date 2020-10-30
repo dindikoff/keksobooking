@@ -1,6 +1,5 @@
 'use strict';
 
-(function () {
   const pin = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   const map = document.querySelector(`.map__pins`);
 
@@ -31,4 +30,3 @@
     renderPinsElements
   };
 
-})();

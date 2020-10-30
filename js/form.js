@@ -1,6 +1,5 @@
 'use strict';
 
-(function () {
   const adForm = document.querySelector(`.ad-form`);
   const addressInput = adForm.querySelector(`#address`);
   const mainPin = document.querySelector(`.map__pin--main`);
@@ -88,4 +87,3 @@
 
   };
 
-})();

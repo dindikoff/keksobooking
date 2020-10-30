@@ -1,6 +1,5 @@
 'use strict';
 
-(function () {
   const filterElement = document.querySelector(`.map__filters`);
   filterElement.style.opacity = `1`;
 
@@ -150,4 +149,3 @@
     getFilterInfo
   };
 
-})();

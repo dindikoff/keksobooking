@@ -1,6 +1,5 @@
 'use strict';
 
-(function () {
   const mapFilters = document.querySelector(`.map__filters`);
 
   let pins = [];
@@ -22,4 +21,3 @@
     updatePins,
   };
 
-})();

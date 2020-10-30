@@ -1,5 +1,4 @@
 'use strict';
-(function () {
 
   const doMove = (movedElement, cb) => {
     movedElement.addEventListener(`mousedown`, function (evt) {
@@ -59,4 +58,3 @@
     doMove
   };
 
-})();

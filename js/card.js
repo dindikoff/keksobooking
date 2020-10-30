@@ -1,6 +1,5 @@
 'use strict';
 
-(function () {
   const card = document.querySelector(`#card`).content.querySelector(`.popup`);
   const map = document.querySelector(`.map__pins`);
   const mapFilter = document.querySelector(`.map__filters-container`);
@@ -101,4 +100,3 @@
     deleteCards
   };
 
-})();

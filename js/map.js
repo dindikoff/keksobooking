@@ -1,23 +1,22 @@
 'use strict';
 
-  const mapFilters = document.querySelector(`.map__filters`);
+const mapFilters = document.querySelector(`.map__filters`);
 
-  let pins = [];
+let pins = [];
 
-  const updatePins = () => {
-    window.card.deleteCards();
-    window.filter.getFilterInfo(pins);
+const updatePins = () => {
+  window.card.deleteCards();
+  window.filter.getFilterInfo(pins);
 
-    window.form.disabledForm(mapFilters, false);
-  };
+  window.form.disabledForm(mapFilters, false);
+};
 
-  const successHandler = (data) => {
-    pins = data;
-  };
+const successHandler = (data) => {
+  pins = data;
+};
 
-  window.backend.load(successHandler, window.utils.errorHandler);
+window.backend.load(successHandler, window.utils.errorHandler);
 
-  window.map = {
-    updatePins,
-  };
-
+window.map = {
+  updatePins,
+};

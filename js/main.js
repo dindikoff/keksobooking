@@ -90,4 +90,3 @@ resetButton.addEventListener(`click`, () => {
 
 
 turnOffPage();
-

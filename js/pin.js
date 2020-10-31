@@ -1,34 +1,31 @@
 'use strict';
 
-(function () {
-  const pin = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
-  const map = document.querySelector(`.map__pins`);
+const pin = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
+const map = document.querySelector(`.map__pins`);
 
-  const renderPin = function (obj) {
-    const pinElement = pin.cloneNode(true);
-    const pinImage = pinElement.querySelector(`img`);
-    pinElement.style.left = `${obj.location.x}px`;
-    pinElement.style.top = `${obj.location.y}px`;
-    pinImage.src = obj.author.avatar;
+const renderPin = function (obj) {
+  const pinElement = pin.cloneNode(true);
+  const pinImage = pinElement.querySelector(`img`);
+  pinElement.style.left = `${obj.location.x}px`;
+  pinElement.style.top = `${obj.location.y}px`;
+  pinImage.src = obj.author.avatar;
 
-    return pinElement;
-  };
+  return pinElement;
+};
 
-  const renderPinsElements = (pins) => {
-    const MAX_AD_NUMBER = 5;
-    const theNumber = pins.length < MAX_AD_NUMBER ? pins.length : MAX_AD_NUMBER;
-    const fragment = document.createDocumentFragment();
+const renderPinsElements = (pins) => {
+  const MAX_AD_NUMBER = 5;
+  const theNumber = pins.length < MAX_AD_NUMBER ? pins.length : MAX_AD_NUMBER;
+  const fragment = document.createDocumentFragment();
 
-    for (let pinItem = 0; pinItem < theNumber; pinItem++) {
-      fragment.appendChild(renderPin(pins[pinItem]));
-    }
+  for (let pinItem = 0; pinItem < theNumber; pinItem++) {
+    fragment.appendChild(renderPin(pins[pinItem]));
+  }
 
-    map.appendChild(fragment);
-  };
+  map.appendChild(fragment);
+};
 
-  window.pin = {
-    renderPin,
-    renderPinsElements
-  };
-
-})();
+window.pin = {
+  renderPin,
+  renderPinsElements
+};

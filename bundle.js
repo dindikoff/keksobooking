@@ -624,6 +624,9 @@ const successElement = document.querySelector(`#success`).content.querySelector(
 const errorElement = document.querySelector(`#error`).content.querySelector(`.error`);
 const resetButton = document.querySelector(`.ad-form__reset`);
 const submitButton = document.querySelector(`.ad-form__submit`);
+const PIN_MAIN_DEFAULT = {
+  left: 570, top: 375
+};
 
 const turnOffPage = () => {
   window.card.deleteCards(); // Delete List
@@ -632,6 +635,8 @@ const turnOffPage = () => {
   map.classList.add(`map--faded`);
   adForm.classList.add(`ad-form--disabled`);
   adForm.reset();
+  mapFilters.reset();
+  mainPinReset();
 };
 
 const turnOnPage = () => {
@@ -647,11 +652,17 @@ mainPin.addEventListener(`mousedown`, (evt) => {
   }
 });
 
+const mainPinReset = () => {
+  mainPin.style.top = PIN_MAIN_DEFAULT.top + `px`;
+  mainPin.style.left = PIN_MAIN_DEFAULT.left + `px`;
+};
+
 const mainPinMove = () => {
   const PinParam = {
     'MIN_TOP': 130,
     'MAX_TOP': 630
   };
+
 
   const pinCords = window.utils.getElementCords(mainPin, window.utils.PIN_PARAM.width, window.utils.PIN_PARAM.height);
 

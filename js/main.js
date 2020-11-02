@@ -88,8 +88,6 @@ const onError = () => {
 adForm.addEventListener(`submit`, (evt) => {
   window.form.checkRoomValidity();
   window.form.typeOfHouses();
-  window.form.checkImage(`#images`);
-  window.form.checkImage(`#avatar`);
   submitButton.disabled = true;
   window.backend.send(new FormData(adForm), onLoad, onError);
   evt.preventDefault();
@@ -98,6 +96,5 @@ adForm.addEventListener(`submit`, (evt) => {
 resetButton.addEventListener(`click`, () => {
   turnOffPage();
 });
-
 
 turnOffPage();

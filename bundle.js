@@ -515,15 +515,6 @@ timeOut.addEventListener(`change`, () => {
   timeIn.value = timeOut.value;
 });
 
-const checkImage = (fileInput) => {
-  const placeImage = document.querySelector(fileInput);
-  if (!window.utils.hasExtension(placeImage, [`.jpg`, `.gif`, `.png`])) {
-    placeImage.setCustomValidity(`Загрузите изображение в формате .jpg, .gif или .png`);
-  } else {
-    placeImage.setCustomValidity(``);
-  }
-};
-
 addressInput.value = `${mainPin.offsetLeft}, ${mainPin.offsetTop}`;
 
 window.form = {
@@ -531,7 +522,6 @@ window.form = {
   changeAddressInput,
   checkRoomValidity,
   typeOfHouses,
-  checkImage
 
 };
 
@@ -704,8 +694,6 @@ const onError = () => {
 adForm.addEventListener(`submit`, (evt) => {
   window.form.checkRoomValidity();
   window.form.typeOfHouses();
-  window.form.checkImage(`#images`);
-  window.form.checkImage(`#avatar`);
   submitButton.disabled = true;
   window.backend.send(new FormData(adForm), onLoad, onError);
   evt.preventDefault();

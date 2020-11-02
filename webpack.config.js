@@ -11,6 +11,7 @@ module.exports = {
     './js/pin.js',
     './js/main.js',
     './js/debounce.js',
+    './js/pictures.js',
     './js/filter.js',
   ],
 

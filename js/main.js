@@ -9,6 +9,10 @@ const errorElement = document.querySelector(`#error`).content.querySelector(`.er
 const resetButton = document.querySelector(`.ad-form__reset`);
 const submitButton = document.querySelector(`.ad-form__submit`);
 
+const PIN_MAIN_DEFAULT = {
+  left: 570, top: 375
+};
+
 const turnOffPage = () => {
   window.card.deleteCards(); // Delete List
   window.form.disabledForm(adForm);
@@ -16,6 +20,8 @@ const turnOffPage = () => {
   map.classList.add(`map--faded`);
   adForm.classList.add(`ad-form--disabled`);
   adForm.reset();
+  mapFilters.reset();
+  mainPinReset();
 };
 
 const turnOnPage = () => {
@@ -30,6 +36,12 @@ mainPin.addEventListener(`mousedown`, (evt) => {
     turnOnPage();
   }
 });
+
+const mainPinReset = () => {
+  mainPin.style.top = PIN_MAIN_DEFAULT.top + `px`;
+  mainPin.style.left = PIN_MAIN_DEFAULT.left + `px`;
+};
+
 
 const mainPinMove = () => {
   const PinParam = {
@@ -77,8 +89,6 @@ const onError = () => {
 adForm.addEventListener(`submit`, (evt) => {
   window.form.checkRoomValidity();
   window.form.typeOfHouses();
-  window.form.checkImage(`#images`);
-  window.form.checkImage(`#avatar`);
   submitButton.disabled = true;
   window.backend.send(new FormData(adForm), onLoad, onError);
   evt.preventDefault();

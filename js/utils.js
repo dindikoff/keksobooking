@@ -1,17 +1,18 @@
-'use strict';
-
-const Key = {
-  'ENTER': `Enter`,
-  'ESC': `Escape`,
-  'MOUSE_LEFT_BUTTON': 1
-};
+"use strict";
 
 const PIN_PARAM = {
-  'width': 50,
-  'height': 70
+  "WIDTH": 65,
+  "HEIGHT": 65,
+  "LEG_HEIGHT": 22
 };
 
-const getRandomInt = function (min = 0, max = 100) {
+const Key = {
+  "ENTER": `Enter`,
+  "ESC": `Escape`,
+  "MOUSE_LEFT_BUTTON": 1
+};
+
+const getRandomInt = (min = 0, max = 100) => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
@@ -31,14 +32,14 @@ const getRandomLengthString = (arr) => {
 const showListElements = (list, cb) => {
   const fragment = document.createDocumentFragment();
 
-  for (let el of list) {
-    fragment.append(cb(el));
-  }
+  list.forEach((element) => {
+    fragment.append(cb(element));
+  });
 
   return fragment;
 };
 
-const endingsGenerator = (number, titles) => {
+const generateEndings = (number, titles) => {
   const decCache = [];
   const decCases = [2, 0, 1, 1, 1, 2];
   if (!decCache[number]) {
@@ -57,17 +58,14 @@ const deleteNode = (nodeClass) => {
 const removeList = (domList, cb) => {
   const mapList = document.querySelectorAll(domList);
   cb();
-  for (let i = 1; i < mapList.length; i++) {
-    mapList[i].remove();
-  }
+
+  mapList.forEach((domElement, index) => {
+    return (index > 0) ? domElement.remove() : ``;
+  });
+
 };
 
-const hasExtension = (inputID, exts) => {
-  const fileName = inputID.value;
-  return (new RegExp(`(` + exts.join(`|`).replace(/\./g, `\\.`) + `)$`)).test(fileName);
-};
-
-const errorHandler = (errorText) => {
+const onError = (errorText) => {
   const node = document.createElement(`div`);
   node.style.position = `fixed`;
   node.style.top = `40%`;
@@ -86,13 +84,11 @@ const errorHandler = (errorText) => {
   document.body.insertAdjacentElement(`afterbegin`, node);
 };
 
-const getElementCords = (element, paramsWidth, paramsHeight) => {
-  const elementCords = {
-    left: element.offsetLeft + (paramsWidth / 2),
-    top: element.offsetTop + paramsHeight
+const getElementCoords = (element) => {
+  return {
+    left: Math.floor(element.offsetLeft + (PIN_PARAM.WIDTH / 2)),
+    top: Math.floor(element.offsetTop + PIN_PARAM.HEIGHT + PIN_PARAM.LEG_HEIGHT)
   };
-
-  return elementCords;
 };
 
 const showServerStatus = (element, placeToShow) => {
@@ -102,23 +98,18 @@ const showServerStatus = (element, placeToShow) => {
   const submitButton = document.querySelector(`.ad-form__submit`);
   placeToShow.append(successEl);
 
-  const closeByClick = (evt) => {
+  const onCloseByClick = (evt) => {
     if (evt.target.parentNode !== successEl) {
       successEl.remove();
       submitButton.disabled = false;
     }
-
-    document.removeEventListener(`keydown`, closeByEsc);
   };
 
-  const closeByEsc = (evt) => {
+  const onCloseByEsc = (evt) => {
     if (evt.key === window.utils.Key.ESC) {
       successEl.remove();
       submitButton.disabled = false;
     }
-
-    document.removeEventListener(`keydown`, closeByEsc);
-    document.removeEventListener(`click`, closeByClick);
   };
 
   if (button) {
@@ -128,21 +119,18 @@ const showServerStatus = (element, placeToShow) => {
     });
   }
 
-  document.addEventListener(`keydown`, closeByEsc);
-  successEl.addEventListener(`click`, closeByClick);
+  document.addEventListener(`keydown`, onCloseByEsc);
+  successEl.addEventListener(`click`, onCloseByClick);
 };
 
 const contains = (where, what) => {
-  const found = what.every((r) => where.includes(r));
-  return found;
+  return what.every((r) => where.includes(r));
 };
 
-const endMatches = (endingsArr, fileName) => {
-  const result = endingsArr.some((ending) => {
+const isWordEndings = (endingsArr, fileName) => {
+  return endingsArr.some((ending) => {
     return fileName.endsWith(ending);
   });
-
-  return result;
 };
 
 window.utils = {
@@ -153,13 +141,12 @@ window.utils = {
   getRandomLocation,
   getRandomLengthString,
   showListElements,
-  endingsGenerator,
+  generateEndings,
   deleteNode,
-  hasExtension,
-  errorHandler,
+  onError,
   removeList,
-  getElementCords,
+  getElementCoords,
   showServerStatus,
   contains,
-  endMatches
+  isWordEndings
 };

@@ -1,92 +1,104 @@
-'use strict';
+"use strict";
+
+const PIN_MAIN_DEFAULT = {
+  left: 570, top: 375
+};
+
 const adForm = document.querySelector(`.ad-form`);
 const mapFilters = document.querySelector(`.map__filters`);
 const mainPin = document.querySelector(`.map__pin--main`);
-const map = document.querySelector(`.map__pins`);
-const mapOverlay = document.querySelector(`.map__overlay`);
-const successElement = document.querySelector(`#success`).content.querySelector(`.success`);
-const errorElement = document.querySelector(`#error`).content.querySelector(`.error`);
-const resetButton = document.querySelector(`.ad-form__reset`);
+const mainMap = document.querySelector(`.map`);
 const submitButton = document.querySelector(`.ad-form__submit`);
+const successElement = document.querySelector(`#success`).content.querySelector(`.success`);
+const errorElement = document
+  .querySelector(`#error`)
+  .content.querySelector(`.error`);
+
+const resetButton = document.querySelector(`.ad-form__reset`);
+const addressInput = document.querySelector(`#address`);
+
+let pins = [];
 
 const turnOffPage = () => {
-  window.card.deleteCards(); // Delete List
-  window.form.disabledForm(adForm);
-  window.form.disabledForm(mapFilters);
-  map.classList.add(`map--faded`);
+  const cords = window.utils.getElementCoords(mainPin, window.utils.PIN_PARAM.width, window.utils.PIN_PARAM.height);
+
+  window.card.delete();
+  addressInput.placeholder = `${cords.left} ${cords.top}`;
+  window.form.setFieldsEnabled(adForm);
+  window.form.setFieldsEnabled(mapFilters);
+  mainMap.classList.add(`map--faded`);
   adForm.classList.add(`ad-form--disabled`);
   adForm.reset();
+  mapFilters.reset();
+  mainPinReset();
+  window.pictures.resetFileInputs();
+  mainPin.addEventListener(`mousedown`, onPageActivationByClick);
+  mainPin.addEventListener(`keydown`, onPageActivationByKey);
+};
+
+const updatePins = () => {
+  window.card.delete();
+  window.filter.getInfo(pins);
+};
+
+const onSuccess = (ads) => {
+  pins = ads;
+  window.filter.getInfo(pins);
+
+  window.form.setFieldsEnabled(adForm, false);
+  window.form.setFieldsEnabled(mapFilters, false);
 };
 
 const turnOnPage = () => {
-  window.form.disabledForm(adForm, false);
-  map.classList.remove(`map--faded`);
+  window.backend.load(onSuccess, window.utils.onError);
+  updatePins();
+
+  mainMap.classList.remove(`map--faded`);
   adForm.classList.remove(`ad-form--disabled`);
-  window.map.updatePins();
+
+  window.form.doValidation();
 };
 
-mainPin.addEventListener(`mousedown`, (evt) => {
+const mainPinReset = () => {
+  mainPin.style.top = PIN_MAIN_DEFAULT.top + `px`;
+  mainPin.style.left = PIN_MAIN_DEFAULT.left + `px`;
+};
+
+const onPageActivationByClick = (evt) => {
   if (evt.buttons === window.utils.Key.MOUSE_LEFT_BUTTON) {
     turnOnPage();
   }
-});
-
-const mainPinMove = () => {
-  const PinParam = {
-    'MIN_TOP': 130,
-    'MAX_TOP': 630
-  };
-
-  const pinCords = window.utils.getElementCords(mainPin, window.utils.PIN_PARAM.width, window.utils.PIN_PARAM.height);
-
-  if (mainPin.offsetTop >= PinParam.MAX_TOP) {
-    mainPin.style.top = `${PinParam.MAX_TOP}px`;
-  } else if (mainPin.offsetTop <= PinParam.MIN_TOP) {
-    mainPin.style.top = `${PinParam.MIN_TOP}px`;
-  }
-
-  if (pinCords.left <= 0) {
-    mainPin.style.left = `${0 - (window.utils.PIN_PARAM.width / 2)}px`;
-  } else if (pinCords.left > mapOverlay.offsetWidth) {
-    mainPin.style.left = `${mapOverlay.offsetWidth - (window.utils.PIN_PARAM.width / 2)}px`;
-  }
+  mainPin.removeEventListener(`mousedown`, onPageActivationByClick);
+  mainPin.removeEventListener(`keydown`, onPageActivationByKey);
 };
 
-window.move.doMove(mainPin, () => {
-  mainPinMove();
-  window.form.changeAddressInput();
-});
-
-mainPin.addEventListener(`keydown`, function (evt) {
-
+const onPageActivationByKey = (evt) => {
   if (evt.key === window.utils.Key.ENTER) {
     turnOnPage();
     window.form.changeAddressInput();
   }
-});
-
-const onLoad = () => {
-  window.utils.showServerStatus(successElement, adForm);
-  turnOffPage();
+  mainPin.removeEventListener(`mousedown`, onPageActivationByClick);
+  mainPin.removeEventListener(`keydown`, onPageActivationByKey);
 };
-
-const onError = () => {
-  window.utils.showServerStatus(errorElement, adForm);
-};
-
-adForm.addEventListener(`submit`, (evt) => {
-  window.form.checkRoomValidity();
-  window.form.typeOfHouses();
-  window.form.checkImage(`#images`);
-  window.form.checkImage(`#avatar`);
-  submitButton.disabled = true;
-  window.backend.send(new FormData(adForm), onLoad, onError);
-  evt.preventDefault();
-});
 
 resetButton.addEventListener(`click`, () => {
   turnOffPage();
 });
 
+const onLoad = () => {
+  window.utils.showServerStatus(successElement, mainMap);
+  turnOffPage();
+};
+
+const onError = () => {
+  window.utils.showServerStatus(errorElement, mainMap);
+};
+
+adForm.addEventListener(`submit`, (evt) => {
+
+  window.backend.send(new FormData(adForm), onLoad, onError);
+  submitButton.disabled = true;
+  evt.preventDefault();
+});
 
 turnOffPage();

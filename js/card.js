@@ -1,28 +1,31 @@
-'use strict';
+"use strict";
 
 const card = document.querySelector(`#card`).content.querySelector(`.popup`);
 const map = document.querySelector(`.map__pins`);
 const mapFilter = document.querySelector(`.map__filters-container`);
 
-const valueToTypeOffer = {
-  'flat': `Квартира`,
-  'bungalow': `Бунгало`,
-  'house': `Дом`,
-  'palace': `Дворец`
+let currentCard;
+
+const offerTypeNames = {
+  "flat": `Квартира`,
+  "bungalow": `Бунгало`,
+  "house": `Дом`,
+  "palace": `Дворец`
 };
 
-const closeModal = () => {
+const onCloseModal = () => {
+  currentCard = null;
   window.utils.deleteNode(`.map__card`);
   document.removeEventListener(`keydown`, onEscPress);
 };
 
 const onEscPress = (evt) => {
   if (evt.key === window.utils.Key.ESC) {
-    closeModal();
+    onCloseModal();
   }
 };
 
-const renderCard = (obj) => {
+const render = (advert) => {
   const cardEl = card.cloneNode(true);
 
   const cardImage = cardEl.querySelector(`.popup__avatar`);
@@ -37,65 +40,68 @@ const renderCard = (obj) => {
   const cardPictures = cardEl.querySelector(`.popup__photos`);
   const closeButton = cardEl.querySelector(`.popup__close`);
 
-  cardImage.src = obj.author.avatar;
-  cardAddress.textContent = obj.offer.address;
-  cardPrice.textContent = `${obj.offer.price}₽/ночь`;
-  cardType.textContent = valueToTypeOffer[obj.offer.type];
-  cardRoomCapacity.textContent = `${window.utils.endingsGenerator(obj.offer.rooms, [`комната`, `комнаты`, `комнат`])}
-    для ${window.utils.endingsGenerator(obj.offer.guests, [`гостя`, `гостей`, `гостей`])}`;
-  cardRoomTime.textContent = `Заезд после ${obj.offer.checkin}, выезд до ${obj.offer.checkout}`;
+  cardImage.src = advert.author.avatar;
+  cardAddress.textContent = advert.offer.address;
+  cardPrice.textContent = `${advert.offer.price}₽/ночь`;
+  cardType.textContent = offerTypeNames[advert.offer.type];
+  cardRoomCapacity.textContent = `${window.utils.generateEndings(advert.offer.rooms, [`комната`, `комнаты`, `комнат`])}
+    для ${window.utils.generateEndings(advert.offer.guests, [`гостя`, `гостей`, `гостей`])}`;
+  cardRoomTime.textContent = `Заезд после ${advert.offer.checkin}, выезд до ${advert.offer.checkout}`;
   cardFeatures.innerHTML = ``;
-  cardFeatures.append(window.utils.showListElements(obj.offer.features, (el) => {
+
+  cardFeatures.append(window.utils.showListElements(advert.offer.features, (featuresItem) => {
     const feature = document.createElement(`li`);
-    feature.className = `popup__feature popup__feature--${el}`;
+    feature.className = `popup__feature popup__feature--${featuresItem}`;
 
     return feature;
   }));
 
-  cardDescription.textContent = obj.offer.description;
+  cardDescription.textContent = advert.offer.description;
 
   cardPictures.innerHTML = ``;
-  cardPictures.append(window.utils.showListElements(obj.offer.photos, (el) => {
+  cardPictures.append(window.utils.showListElements(advert.offer.photos, (photo) => {
     const image = document.createElement(`img`);
     image.className = `popup__photo`;
     image.width = `45`;
-    image.src = el;
+    image.src = photo;
 
     return image;
   }));
 
-  cardTitle.textContent = obj.offer.title;
+  cardTitle.textContent = advert.offer.title;
 
-  closeButton.addEventListener(`click`, closeModal);
+  closeButton.addEventListener(`click`, onCloseModal);
   document.addEventListener(`keydown`, onEscPress);
 
   return cardEl;
 };
 
-const showCard = (evtElement) => {
+const onShowCard = (evtElement) => {
   const mapPins = document.querySelectorAll(`.map__pin:not(.map__pin--main)`);
 
-  for (let i = 0; i < mapPins.length; i++) {
-    if (evtElement.target === mapPins[i] || evtElement.target.parentNode === mapPins[i]) {
-      window.utils.deleteNode(`.map__card`);
-      addCard(i);
+  mapPins.forEach((advert, index) => {
+    if (evtElement.target === advert || evtElement.target.parentNode === advert) {
+      addCard(index);
+      currentCard = index;
     }
-  }
+  });
 };
 
 const addCard = (cardNumber) => {
-  mapFilter.insertAdjacentElement(`beforebegin`, window.card.renderCard(window.state[cardNumber]));
+  if (currentCard !== cardNumber) {
+    window.utils.deleteNode(`.map__card`);
+    mapFilter.insertAdjacentElement(`beforebegin`, render(window.advertisements[cardNumber]));
+  }
 };
 
-const deleteCards = () => {
+const deleteEl = () => {
   window.utils.removeList(`.map__pin`, () => {
     window.utils.deleteNode(`.map__card`);
   });
 };
 
-map.addEventListener(`click`, showCard);
+map.addEventListener(`click`, onShowCard);
 
 window.card = {
-  renderCard,
-  deleteCards
+  delete: deleteEl
 };

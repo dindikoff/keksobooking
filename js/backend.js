@@ -1,22 +1,23 @@
-'use strict';
+"use strict";
 
 const Server = {
   GET_URL: `https://21.javascript.pages.academy/keksobooking/data`,
-  POST_URL: `https://21.javascript.pages.academy/keksobooking`
+  POST_URL: `https://21.javascript.pages.academy/keksobooking`,
 };
 
 const StatusCode = {
   OK: 200,
   BAD_REQUEST: 400,
   NOT_FOUND: 404,
-  SERVER_ERROR: 500
+  SERVER_ERROR: 500,
 };
 
-const load = (onSuccess, onError) => {
+const TIMEOUT_IN_MS = 10000;
+
+const networkOperation = (type, URL, onSuccess, onError, data = {}) => {
   const xhr = new XMLHttpRequest();
   xhr.responseType = `json`;
-
-  xhr.open(`GET`, Server.GET_URL);
+  xhr.open(`${type}`, URL);
 
   xhr.addEventListener(`load`, () => {
     switch (xhr.status) {
@@ -30,7 +31,9 @@ const load = (onSuccess, onError) => {
         onError(`Страница не найдена! ${xhr.status} ${xhr.statusText}`);
         break;
       case StatusCode.SERVER_ERROR:
-        onError(`Серверная ошибка! Попробуйте позже. ${xhr.status} ${xhr.statusText}`);
+        onError(
+            `Серверная ошибка! Попробуйте позже. ${xhr.status} ${xhr.statusText}`
+        );
         break;
 
       default:
@@ -42,38 +45,23 @@ const load = (onSuccess, onError) => {
     onError(`Ошибка! Проверьте Ваше соединение с интернетом!`);
   });
 
-  xhr.send();
-};
-
-const send = (data, onLoad, onError) => {
-  const xhr = new XMLHttpRequest();
-  xhr.responseType = `json`;
-
-  xhr.addEventListener(`load`, () => {
-    switch (xhr.status) {
-      case StatusCode.OK:
-        onLoad(xhr.response);
-        break;
-      case StatusCode.BAD_REQUEST:
-        onError(`Ошибка в запросе! ${xhr.status} ${xhr.statusText}`);
-        break;
-      case StatusCode.NOT_FOUND:
-        onError(`Страница не найдена! ${xhr.status} ${xhr.statusText}`);
-        break;
-      case StatusCode.SERVER_ERROR:
-        onError(`Серверная ошибка! Попробуйте позже. ${xhr.status} ${xhr.statusText}`);
-        break;
-
-      default:
-        onError(`Статус ответа: ${xhr.status} ${xhr.statusText}`);
-    }
+  xhr.addEventListener(`timeout`, () => {
+    onError(`Запрос не успел выполниться за ' + xhr.timeout + 'мс'`);
   });
 
-  xhr.open(`POST`, Server.POST_URL);
+  xhr.timeout = TIMEOUT_IN_MS;
   xhr.send(data);
+};
+
+const load = (onSuccess, onError) => {
+  networkOperation(`GET`, Server.GET_URL, onSuccess, onError);
+};
+
+const send = (data, onSuccess, onError) => {
+  networkOperation(`POST`, Server.POST_URL, onSuccess, onError, data);
 };
 
 window.backend = {
   load,
-  send
+  send,
 };

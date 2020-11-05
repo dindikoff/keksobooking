@@ -1,14 +1,38 @@
-'use strict';
+"use strict";
 
 const filterElement = document.querySelector(`.map__filters`);
-filterElement.style.opacity = `1`;
 
-const getFilterInfo = (data) => {
+const getInfo = (data) => {
   const houseType = document.querySelector(`#housing-type`);
   const housePrice = document.querySelector(`#housing-price`);
   const houseRooms = document.querySelector(`#housing-rooms`);
   const houseGuest = document.querySelector(`#housing-guests`);
-  const mapFeature = filterElement.querySelectorAll(`[name="features"]`);
+  const mapFeatures = filterElement.querySelectorAll(`[name="features"]`);
+
+  const PRICE_RULE = {
+    middle: {
+      min: 10000,
+      max: 50000,
+    },
+    low: {
+      max: 10000,
+    },
+    high: {
+      max: 50000,
+    },
+  };
+
+  const ROOM_NUMBER = {
+    one: 1,
+    two: 2,
+    three: 3,
+  };
+
+  const GUEST_NUMBER = {
+    zero: 0,
+    one: 1,
+    two: 2,
+  };
 
   window.state = data;
   const makeData = (arr) => {
@@ -21,64 +45,64 @@ const getFilterInfo = (data) => {
         'flat': arr.filter((pin) => {
           return pin.offer.type === `flat`;
         }),
-        'house': arr.filter(((pin) => {
+        'house': arr.filter((pin) => {
           return pin.offer.type === `house`;
-        })),
-        'bungalow': arr.filter(((pin) => {
+        }),
+        'bungalow': arr.filter((pin) => {
           return pin.offer.type === `bungalow`;
-        }))
+        }),
       },
 
       price: {
         'any': arr,
         'middle': arr.filter((pin) => {
-          if (pin.offer.price < 10000 || pin.offer.price < 50000) {
+          if (
+            pin.offer.price < PRICE_RULE.middle.low ||
+            pin.offer.price < PRICE_RULE.middle.max
+          ) {
             return pin;
-          } else {
-            return ``;
           }
+          return ``;
         }),
         'low': arr.filter((pin) => {
-          if (pin.offer.price < 10000) {
+          if (pin.offer.price < PRICE_RULE.low.max) {
             return pin;
-          } else {
-            return ``;
           }
+          return ``;
         }),
         'high': arr.filter((pin) => {
-          if (pin.offer.price > 50000) {
+          if (pin.offer.price > PRICE_RULE.high.max) {
             return pin;
-          } else {
-            return ``;
           }
-        })
+          return ``;
+        }),
       },
 
       room: {
         'any': arr,
-        '1': arr.filter((pin) => {
-          return pin.offer.rooms === 1;
+        "1": arr.filter((pin) => {
+          return pin.offer.rooms === ROOM_NUMBER.one;
         }),
-        '2': arr.filter((pin) => {
-          return pin.offer.rooms === 2;
+        "2": arr.filter((pin) => {
+          return pin.offer.rooms === ROOM_NUMBER.two;
         }),
-        '3': arr.filter((pin) => {
-          return pin.offer.rooms === 3;
-        })
+        "3": arr.filter((pin) => {
+          return pin.offer.rooms === ROOM_NUMBER.three;
+        }),
       },
 
       guests: {
         'any': arr,
-        '2': arr.filter((pin) => {
-          return pin.offer.guests === 2;
+        "2": arr.filter((pin) => {
+          return pin.offer.guests === GUEST_NUMBER.two;
         }),
-        '1': arr.filter((pin) => {
-          return pin.offer.guests === 1;
+        "1": arr.filter((pin) => {
+          return pin.offer.guests === GUEST_NUMBER.one;
         }),
-        '0': arr.filter((pin) => {
-          return pin.offer.guests === 0;
+        "0": arr.filter((pin) => {
+          return pin.offer.guests === GUEST_NUMBER.zero;
         }),
-      }
+      },
     };
     return Filters;
   };
@@ -86,12 +110,11 @@ const getFilterInfo = (data) => {
   const features = (arr) => {
     let featureList = [];
 
-    mapFeature.forEach((element) => {
+    mapFeatures.forEach((element) => {
       if (element.checked) {
         featureList.push(element.defaultValue);
       }
     });
-
 
     const newArray = [];
 
@@ -124,12 +147,11 @@ const getFilterInfo = (data) => {
         features(state);
         break;
     }
-
   };
 
-  window.pin.renderPinsElements(window.state);
+  window.pin.renderAll(window.state);
 
-  const update = window.debounce(() => {
+  const onUpdate = window.debounce(() => {
     window.state = data;
     createNewFilter(window.state, `type`);
     createNewFilter(window.state, `price`);
@@ -137,14 +159,14 @@ const getFilterInfo = (data) => {
     createNewFilter(window.state, `guest`);
     createNewFilter(window.state, `features`);
 
-    window.card.deleteCards();
-    window.debounce(window.pin.renderPinsElements(window.state));
-
+    window.card.delete();
+    window.debounce(window.pin.renderAll(window.state));
   });
 
-  filterElement.addEventListener(`change`, update);
+  filterElement.addEventListener(`change`, onUpdate);
 };
 
 window.filter = {
-  getFilterInfo
+  getInfo,
+  status,
 };

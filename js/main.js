@@ -2,79 +2,84 @@
 const adForm = document.querySelector(`.ad-form`);
 const mapFilters = document.querySelector(`.map__filters`);
 const mainPin = document.querySelector(`.map__pin--main`);
-const map = document.querySelector(`.map__pins`);
-const mapOverlay = document.querySelector(`.map__overlay`);
-const successElement = document.querySelector(`#success`).content.querySelector(`.success`);
-const errorElement = document.querySelector(`#error`).content.querySelector(`.error`);
-const resetButton = document.querySelector(`.ad-form__reset`);
+const mainMap = document.querySelector(`.map`);
 const submitButton = document.querySelector(`.ad-form__submit`);
+const successElement = document.querySelector(`#success`).content.querySelector(`.success`);
+const errorElement = document
+  .querySelector(`#error`)
+  .content.querySelector(`.error`);
+
+const resetButton = document.querySelector(`.ad-form__reset`);
+const addressInput = document.querySelector(`#address`);
 
 const PIN_MAIN_DEFAULT = {
   left: 570, top: 375
 };
 
+let pins = [];
+
 const turnOffPage = () => {
-  window.card.deleteCards(); // Delete List
-  window.form.disabledForm(adForm);
-  window.form.disabledForm(mapFilters);
-  map.classList.add(`map--faded`);
+  const cords = window.utils.getElementCords(mainPin, window.utils.PIN_PARAM.width, window.utils.PIN_PARAM.height);
+
+  window.card.delete();
+  addressInput.placeholder = `${cords.left} ${cords.top}`;
+  window.form.disabled(adForm);
+  window.form.disabled(mapFilters);
+  mainMap.classList.add(`map--faded`);
   adForm.classList.add(`ad-form--disabled`);
   adForm.reset();
   mapFilters.reset();
   mainPinReset();
+
+  mainPin.addEventListener(`mousedown`, onPageActivationByClick);
+  mainPin.addEventListener(`keydown`, onPageActivationByKey);
+};
+
+const updatePins = () => {
+  window.card.delete();
+  window.filter.getInfo(pins);
+};
+
+const onSuccess = (data) => {
+  pins = data;
+  window.filter.getInfo(pins);
+
+  window.form.disabled(adForm, false);
+  window.form.disabled(mapFilters, false);
 };
 
 const turnOnPage = () => {
-  window.form.disabledForm(adForm, false);
-  map.classList.remove(`map--faded`);
-  adForm.classList.remove(`ad-form--disabled`);
-  window.map.updatePins();
-};
+  window.backend.load(onSuccess, window.utils.onError);
+  updatePins();
 
-mainPin.addEventListener(`mousedown`, (evt) => {
-  if (evt.buttons === window.utils.Key.MOUSE_LEFT_BUTTON) {
-    turnOnPage();
-  }
-});
+  mainMap.classList.remove(`map--faded`);
+  adForm.classList.remove(`ad-form--disabled`);
+  window.form.changeAddressInput();
+};
 
 const mainPinReset = () => {
   mainPin.style.top = PIN_MAIN_DEFAULT.top + `px`;
   mainPin.style.left = PIN_MAIN_DEFAULT.left + `px`;
 };
 
-
-const mainPinMove = () => {
-  const PinParam = {
-    'MIN_TOP': 130,
-    'MAX_TOP': 630
-  };
-
-  const pinCords = window.utils.getElementCords(mainPin, window.utils.PIN_PARAM.width, window.utils.PIN_PARAM.height);
-
-  if (mainPin.offsetTop >= PinParam.MAX_TOP) {
-    mainPin.style.top = `${PinParam.MAX_TOP}px`;
-  } else if (mainPin.offsetTop <= PinParam.MIN_TOP) {
-    mainPin.style.top = `${PinParam.MIN_TOP}px`;
+const onPageActivationByClick = (evt) => {
+  if (evt.buttons === window.utils.Key.MOUSE_LEFT_BUTTON) {
+    turnOnPage();
   }
-
-  if (pinCords.left <= 0) {
-    mainPin.style.left = `${0 - (window.utils.PIN_PARAM.width / 2)}px`;
-  } else if (pinCords.left > mapOverlay.offsetWidth) {
-    mainPin.style.left = `${mapOverlay.offsetWidth - (window.utils.PIN_PARAM.width / 2)}px`;
-  }
+  mainPin.removeEventListener(`mousedown`, onPageActivationByClick);
 };
 
-window.move.doMove(mainPin, () => {
-  mainPinMove();
-  window.form.changeAddressInput();
-});
-
-mainPin.addEventListener(`keydown`, function (evt) {
-
+const onPageActivationByKey = (evt) => {
   if (evt.key === window.utils.Key.ENTER) {
     turnOnPage();
     window.form.changeAddressInput();
   }
+
+  mainPin.removeEventListener(`keydown`, onPageActivationByKey);
+};
+
+resetButton.addEventListener(`click`, () => {
+  turnOffPage();
 });
 
 const onLoad = () => {
@@ -87,16 +92,10 @@ const onError = () => {
 };
 
 adForm.addEventListener(`submit`, (evt) => {
-  window.form.checkRoomValidity();
-  window.form.typeOfHouses();
-  submitButton.disabled = true;
   window.backend.send(new FormData(adForm), onLoad, onError);
+  submitButton.disabled = true;
+
   evt.preventDefault();
 });
-
-resetButton.addEventListener(`click`, () => {
-  turnOffPage();
-});
-
 
 turnOffPage();

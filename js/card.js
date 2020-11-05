@@ -11,18 +11,18 @@ const valueToTypeOffer = {
   'palace': `Дворец`
 };
 
-const closeModal = () => {
+const onCloseModal = () => {
   window.utils.deleteNode(`.map__card`);
   document.removeEventListener(`keydown`, onEscPress);
 };
 
 const onEscPress = (evt) => {
   if (evt.key === window.utils.Key.ESC) {
-    closeModal();
+    onCloseModal();
   }
 };
 
-const renderCard = (obj) => {
+const render = (obj) => {
   const cardEl = card.cloneNode(true);
 
   const cardImage = cardEl.querySelector(`.popup__avatar`);
@@ -66,36 +66,35 @@ const renderCard = (obj) => {
 
   cardTitle.textContent = obj.offer.title;
 
-  closeButton.addEventListener(`click`, closeModal);
+  closeButton.addEventListener(`click`, onCloseModal);
   document.addEventListener(`keydown`, onEscPress);
 
   return cardEl;
 };
 
-const showCard = (evtElement) => {
+const onShowCard = (evtElement) => {
   const mapPins = document.querySelectorAll(`.map__pin:not(.map__pin--main)`);
 
-  for (let i = 0; i < mapPins.length; i++) {
-    if (evtElement.target === mapPins[i] || evtElement.target.parentNode === mapPins[i]) {
+  mapPins.forEach((el, index) => {
+    if (evtElement.target === el || evtElement.target.parentNode === el) {
       window.utils.deleteNode(`.map__card`);
-      addCard(i);
+      addCard(index);
     }
-  }
+  });
 };
 
 const addCard = (cardNumber) => {
-  mapFilter.insertAdjacentElement(`beforebegin`, window.card.renderCard(window.state[cardNumber]));
+  mapFilter.insertAdjacentElement(`beforebegin`, render(window.state[cardNumber]));
 };
 
-const deleteCards = () => {
+const deleteEl = () => {
   window.utils.removeList(`.map__pin`, () => {
     window.utils.deleteNode(`.map__card`);
   });
 };
 
-map.addEventListener(`click`, showCard);
+map.addEventListener(`click`, onShowCard);
 
 window.card = {
-  renderCard,
-  deleteCards
+  delete: deleteEl
 };

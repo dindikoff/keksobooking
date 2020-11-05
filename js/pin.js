@@ -3,7 +3,7 @@
 const pin = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 const map = document.querySelector(`.map__pins`);
 
-const renderPin = function (obj) {
+const render = function (obj) {
   const pinElement = pin.cloneNode(true);
   const pinImage = pinElement.querySelector(`img`);
   pinElement.style.left = `${obj.location.x}px`;
@@ -13,19 +13,19 @@ const renderPin = function (obj) {
   return pinElement;
 };
 
-const renderPinsElements = (pins) => {
+const renderAll = (pins) => {
   const MAX_AD_NUMBER = 5;
   const theNumber = pins.length < MAX_AD_NUMBER ? pins.length : MAX_AD_NUMBER;
   const fragment = document.createDocumentFragment();
 
   for (let pinItem = 0; pinItem < theNumber; pinItem++) {
-    fragment.appendChild(renderPin(pins[pinItem]));
+    fragment.appendChild(render(pins[pinItem]));
   }
 
   map.appendChild(fragment);
 };
 
 window.pin = {
-  renderPin,
-  renderPinsElements
+  render,
+  renderAll
 };

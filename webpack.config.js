@@ -7,12 +7,12 @@ module.exports = {
     './js/move.js',
     './js/card.js',
     './js/form.js',
-    './js/map.js',
     './js/pin.js',
-    './js/main.js',
     './js/debounce.js',
-    './js/pictures.js',
     './js/filter.js',
+    './js/main.js',
+
+    './js/pictures.js',
   ],
 
   output: {

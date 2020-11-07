@@ -7,7 +7,6 @@ module.exports = {
     './js/move.js',
     './js/card.js',
     './js/form.js',
-    './js/map.js',
     './js/pin.js',
     './js/main.js',
     './js/debounce.js',

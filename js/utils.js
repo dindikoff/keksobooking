@@ -7,8 +7,9 @@ const Key = {
 };
 
 const PIN_PARAM = {
-  'width': 50,
-  'height': 70
+  'WIDTH': 65,
+  'HEIGHT': 65,
+  'LEG_HEIGHT': 22
 };
 
 const getRandomInt = function (min = 0, max = 100) {
@@ -31,9 +32,9 @@ const getRandomLengthString = (arr) => {
 const showListElements = (list, cb) => {
   const fragment = document.createDocumentFragment();
 
-  for (let el of list) {
-    fragment.append(cb(el));
-  }
+  list.forEach((element) => {
+    fragment.append(cb(element));
+  });
 
   return fragment;
 };
@@ -60,6 +61,7 @@ const removeList = (domList, cb) => {
   for (let i = 1; i < mapList.length; i++) {
     mapList[i].remove();
   }
+
 };
 
 const hasExtension = (inputID, exts) => {
@@ -67,7 +69,7 @@ const hasExtension = (inputID, exts) => {
   return (new RegExp(`(` + exts.join(`|`).replace(/\./g, `\\.`) + `)$`)).test(fileName);
 };
 
-const errorHandler = (errorText) => {
+const onError = (errorText) => {
   const node = document.createElement(`div`);
   node.style.position = `fixed`;
   node.style.top = `40%`;
@@ -86,10 +88,10 @@ const errorHandler = (errorText) => {
   document.body.insertAdjacentElement(`afterbegin`, node);
 };
 
-const getElementCords = (element, paramsWidth, paramsHeight) => {
+const getElementCords = (element) => {
   const elementCords = {
-    left: element.offsetLeft + (paramsWidth / 2),
-    top: element.offsetTop + paramsHeight
+    left: Math.floor(element.offsetLeft + (PIN_PARAM.WIDTH / 2)),
+    top: Math.floor(element.offsetTop + PIN_PARAM.HEIGHT + PIN_PARAM.LEG_HEIGHT)
   };
 
   return elementCords;
@@ -102,23 +104,23 @@ const showServerStatus = (element, placeToShow) => {
   const submitButton = document.querySelector(`.ad-form__submit`);
   placeToShow.append(successEl);
 
-  const closeByClick = (evt) => {
+  const onCloseByClick = (evt) => {
     if (evt.target.parentNode !== successEl) {
       successEl.remove();
       submitButton.disabled = false;
     }
 
-    document.removeEventListener(`keydown`, closeByEsc);
+    document.removeEventListener(`keydown`, onCloseByEsc);
   };
 
-  const closeByEsc = (evt) => {
+  const onCloseByEsc = (evt) => {
     if (evt.key === window.utils.Key.ESC) {
       successEl.remove();
       submitButton.disabled = false;
     }
 
-    document.removeEventListener(`keydown`, closeByEsc);
-    document.removeEventListener(`click`, closeByClick);
+    document.removeEventListener(`keydown`, onCloseByEsc);
+    document.removeEventListener(`click`, onCloseByClick);
   };
 
   if (button) {
@@ -128,8 +130,8 @@ const showServerStatus = (element, placeToShow) => {
     });
   }
 
-  document.addEventListener(`keydown`, closeByEsc);
-  successEl.addEventListener(`click`, closeByClick);
+  document.addEventListener(`keydown`, onCloseByEsc);
+  successEl.addEventListener(`click`, onCloseByClick);
 };
 
 const contains = (where, what) => {
@@ -156,7 +158,7 @@ window.utils = {
   endingsGenerator,
   deleteNode,
   hasExtension,
-  errorHandler,
+  onError,
   removeList,
   getElementCords,
   showServerStatus,

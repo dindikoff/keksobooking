@@ -31,6 +31,7 @@ const turnOffPage = () => {
   adForm.reset();
   mapFilters.reset();
   mainPinReset();
+
   window.pictures.resetFileInputs();
   mainPin.addEventListener(`mousedown`, onPageActivationByClick);
   mainPin.addEventListener(`keydown`, onPageActivationByKey);

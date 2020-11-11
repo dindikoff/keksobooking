@@ -1,5 +1,4 @@
 "use strict";
-
 const PRICE_RULE = {
   middle: {
     min: 10000,

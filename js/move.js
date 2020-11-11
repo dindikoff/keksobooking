@@ -1,5 +1,4 @@
 "use strict";
-
 const PIN_PARAM = {
   MIN_TOP:
     130 - window.utils.PIN_PARAM.HEIGHT - window.utils.PIN_PARAM.LEG_HEIGHT,

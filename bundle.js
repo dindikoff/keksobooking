@@ -214,7 +214,9 @@ const createRequest = (type, URL, onSuccess, onError, data = {}) => {
   });
 
   xhr.addEventListener(`timeout`, () => {
+
     onError(`Запрос не успел выполниться за ${xhr.timeout} + 'мс'`);
+
   });
 
   xhr.timeout = TIMEOUT_IN_MS;
@@ -301,7 +303,6 @@ window.pictures = {
   \********************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements:  */
-
 
 const PIN_PARAM = {
   MIN_TOP:
@@ -426,8 +427,8 @@ const onEscPress = (evt) => {
     onCloseModal();
   }
 };
-
 const render = (advert) => {
+
   const cardEl = card.cloneNode(true);
 
   const cardImage = cardEl.querySelector(`.popup__avatar`);
@@ -516,7 +517,6 @@ window.card = {
   \********************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements:  */
-
 
 const RULES = {
   TYPE_PRICE: {
@@ -699,6 +699,7 @@ const turnOffPage = () => {
   adForm.reset();
   mapFilters.reset();
   mainPinReset();
+
   window.pictures.resetFileInputs();
   mainPin.addEventListener(`mousedown`, onPageActivationByClick);
   mainPin.addEventListener(`keydown`, onPageActivationByKey);
@@ -804,7 +805,6 @@ window.debounce = (cb) => {
   \**********************/
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements:  */
-
 
 const PRICE_RULE = {
   middle: {

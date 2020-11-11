@@ -1,5 +1,4 @@
 "use strict";
-
 const RULES = {
   TYPE_PRICE: {
     bungalow: 0,

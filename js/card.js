@@ -24,8 +24,8 @@ const onEscPress = (evt) => {
     onCloseModal();
   }
 };
-
 const render = (advert) => {
+
   const cardEl = card.cloneNode(true);
 
   const cardImage = cardEl.querySelector(`.popup__avatar`);

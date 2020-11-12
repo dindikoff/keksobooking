@@ -800,6 +800,7 @@ window.debounce = (cb) => {
 /*! unknown exports (runtime-defined) */
 /*! runtime requirements:  */
 
+
 const PRICE_RULE = {
   middle: {
     min: 10000,
@@ -813,16 +814,50 @@ const PRICE_RULE = {
   },
 };
 
-const ROOM_NUMBER = {
-  one: 1,
-  two: 2,
-  three: 3,
+const getPriceValue = (price) => {
+  if (
+    price > PRICE_RULE.middle.min &&
+    price < PRICE_RULE.middle.max
+  ) {
+    return `middle`;
+  }
+
+  if (price <= PRICE_RULE.low.max) {
+    return `low`;
+  }
+
+  if (price <= PRICE_RULE.high.max) {
+    return `high`;
+  }
+
+  return `any`;
 };
 
-const GUEST_NUMBER = {
-  zero: 0,
-  one: 1,
-  two: 2,
+const getStringValue = (value) => {
+  return value;
+};
+
+const getIntegerValue = (value) => {
+  return parseInt(value);
+};
+
+const Filters = {
+  type: {
+    getFilterValue: getStringValue,
+    getAdValue: getStringValue
+  },
+  rooms: {
+    getFilterValue: getStringValue,
+    getAdValue: getStringValue
+  },
+  guests: {
+    getFilterValue: getIntegerValue,
+    getAdValue: getIntegerValue
+  },
+  price: {
+    getFilterValue: getStringValue,
+    getAdValue: getPriceValue
+  }
 };
 
 const filterElement = document.querySelector(`.map__filters`);
@@ -835,119 +870,26 @@ const getInfo = (data) => {
 
   window.advertisements = data;
 
-  const filterByType = (ads) => {
-    return {
-      "any": ads,
-      "palace": ads.filter((pin) => {
-        return pin.offer.type === `palace`;
-      }),
-      "flat": ads.filter((pin) => {
-        return pin.offer.type === `flat`;
-      }),
-      "house": ads.filter((pin) => {
-        return pin.offer.type === `house`;
-      }),
-      "bungalow": ads.filter((pin) => {
-        return pin.offer.type === `bungalow`;
-      })
-    };
-  };
+  const filterByValue = (value, field) => {
+    if (value === `any`) {
+      return window.advertisements;
+    }
 
-  const filterByPrice = (ads) => {
-    const price = {
-      "any": ads,
-      "middle": ads.filter((ad) => {
-        if (
-          ad.offer.price < PRICE_RULE.middle.low ||
-          ad.offer.price < PRICE_RULE.middle.max
-        ) {
-          return ad;
-        }
-        return ``;
-      }),
-      "low": ads.filter((ad) => {
-        (ad.offer.price < PRICE_RULE.low.max) ? ad : ``;
-        // if (ad.offer.price < PRICE_RULE.low.max) {
-        //   return ad;
-        // }
-        // return ``;
-      }),
-      "high": ads.filter((ad) => {
-        if (ad.offer.price > PRICE_RULE.high.max) {
-          return ad;
-        }
-        return ``;
-      })
-    };
-
-    return price;
-  };
-
-  const filterByRooms = (ads) => {
-    return {
-      "any": ads,
-      "1": ads.filter((pin) => {
-        return pin.offer.rooms === ROOM_NUMBER.one;
-      }),
-      "2": ads.filter((pin) => {
-        return pin.offer.rooms === ROOM_NUMBER.two;
-      }),
-      "3": ads.filter((pin) => {
-        return pin.offer.rooms === ROOM_NUMBER.three;
-      }),
-    };
-  };
-
-  const filterByGuests = (ads) => {
-    return {
-      "any": ads,
-      "2": ads.filter((pin) => {
-        return pin.offer.guests === GUEST_NUMBER.two;
-      }),
-      "1": ads.filter((pin) => {
-        return pin.offer.guests === GUEST_NUMBER.one;
-      }),
-      "0": ads.filter((pin) => {
-        return pin.offer.guests === GUEST_NUMBER.zero;
-      }),
-    };
-  };
-
-  const filterByFeatures = (ads) => {
-    let featureList = [];
-
-    mapFeatures.forEach((feature) => {
-      if (feature.checked) {
-        featureList.push(feature.defaultValue);
-      }
+    return window.advertisements.filter((pin) => {
+      console.log(Filters[field].getAdValue(pin.offer[field]));
+      console.log(Filters[field].getFilterValue(10));
+      return Filters[field].getAdValue(pin.offer[field]) === Filters[field].getFilterValue(value);
     });
-
-    const newAdvertisements = [];
-
-    ads.forEach((ad) => {
-      if (window.utils.contains(ad.offer.features, featureList)) {
-        newAdvertisements.push(ad);
-      }
-    });
-
-    return newAdvertisements;
   };
-
-  const createNewFilter = (filter, state, value) => {
-    window.advertisements = (value) ? filter(state)[value] : filter(state);
-  };
-
 
   window.pin.renderAll(window.advertisements);
 
   const onUpdate = window.debounce(() => {
     window.advertisements = data;
-
-    createNewFilter(filterByType, window.advertisements, houseType.value);
-    createNewFilter(filterByPrice, window.advertisements, housePrice.value);
-    createNewFilter(filterByRooms, window.advertisements, houseRooms.value);
-    createNewFilter(filterByGuests, window.advertisements, houseGuest.value);
-    createNewFilter(filterByFeatures, window.advertisements);
+    window.advertisements = filterByValue(houseType.value, `type`);
+    window.advertisements = filterByValue(houseRooms.value, `rooms`);
+    window.advertisements = filterByValue(houseGuest.value, `guests`);
+    window.advertisements = filterByValue(housePrice.value, `price`);
 
     window.card.delete();
     window.debounce(window.pin.renderAll(window.advertisements));

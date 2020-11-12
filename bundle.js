@@ -135,8 +135,8 @@ const contains = (where, what) => {
   return what.every((r) => where.includes(r));
 };
 
-const isWordEndings = (endingsArr, fileName) => {
-  return endingsArr.some((ending) => {
+const isWordEndings = (endingsList, fileName) => {
+  return endingsList.some((ending) => {
     return fileName.endsWith(ending);
   });
 };
@@ -705,11 +705,6 @@ const turnOffPage = () => {
   mainPin.addEventListener(`keydown`, onPageActivationByKey);
 };
 
-const updatePins = () => {
-  window.card.delete();
-  window.filter.getInfo(pins);
-};
-
 const onSuccess = (ads) => {
   pins = ads;
   window.filter.getInfo(pins);
@@ -720,7 +715,6 @@ const onSuccess = (ads) => {
 
 const turnOnPage = () => {
   window.backend.load(onSuccess, window.utils.onError);
-  updatePins();
 
   mainMap.classList.remove(`map--faded`);
   adForm.classList.remove(`ad-form--disabled`);
@@ -860,7 +854,7 @@ const getInfo = (data) => {
   };
 
   const filterByPrice = (ads) => {
-    return {
+    const price = {
       "any": ads,
       "middle": ads.filter((ad) => {
         if (
@@ -872,10 +866,11 @@ const getInfo = (data) => {
         return ``;
       }),
       "low": ads.filter((ad) => {
-        if (ad.offer.price < PRICE_RULE.low.max) {
-          return ad;
-        }
-        return ``;
+        (ad.offer.price < PRICE_RULE.low.max) ? ad : ``;
+        // if (ad.offer.price < PRICE_RULE.low.max) {
+        //   return ad;
+        // }
+        // return ``;
       }),
       "high": ads.filter((ad) => {
         if (ad.offer.price > PRICE_RULE.high.max) {
@@ -884,6 +879,8 @@ const getInfo = (data) => {
         return ``;
       })
     };
+
+    return price;
   };
 
   const filterByRooms = (ads) => {

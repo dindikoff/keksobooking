@@ -127,8 +127,8 @@ const contains = (where, what) => {
   return what.every((r) => where.includes(r));
 };
 
-const isWordEndings = (endingsArr, fileName) => {
-  return endingsArr.some((ending) => {
+const isWordEndings = (endingsList, fileName) => {
+  return endingsList.some((ending) => {
     return fileName.endsWith(ending);
   });
 };

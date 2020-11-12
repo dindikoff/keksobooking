@@ -37,11 +37,6 @@ const turnOffPage = () => {
   mainPin.addEventListener(`keydown`, onPageActivationByKey);
 };
 
-const updatePins = () => {
-  window.card.delete();
-  window.filter.getInfo(pins);
-};
-
 const onSuccess = (ads) => {
   pins = ads;
   window.filter.getInfo(pins);
@@ -52,7 +47,6 @@ const onSuccess = (ads) => {
 
 const turnOnPage = () => {
   window.backend.load(onSuccess, window.utils.onError);
-  updatePins();
 
   mainMap.classList.remove(`map--faded`);
   adForm.classList.remove(`ad-form--disabled`);

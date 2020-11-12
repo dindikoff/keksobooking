@@ -14,8 +14,8 @@ const resetFileInputs = () => {
   adPictureImage.style.backgroundImage = ``;
 };
 
-const onChangePicture = (inputEl, cb) => {
-  const file = inputEl.files[0];
+const onChangePicture = (inputElement, cb) => {
+  const file = inputElement.files[0];
   const fileName = file.name.toLowerCase();
 
   const matches = window.utils.isWordEndings(FILE_TYPES, fileName);

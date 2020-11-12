@@ -16,17 +16,17 @@ const getRandomInt = (min = 0, max = 100) => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-const getRandomElement = (arr) => {
-  return arr[getRandomInt(0, arr.length)];
+const getRandomElement = (elements) => {
+  return elements[getRandomInt(0, elements.length)];
 };
 
 const getRandomLocation = (pinElement, field) => {
   return getRandomInt(pinElement.width / 2, field.clientWidth - (pinElement.width / 2));
 };
 
-const getRandomLengthString = (arr) => {
+const getRandomLengthString = (elements) => {
   const MIN_NUMBER_OF_ELEMENTS = 1;
-  return arr.slice(0, getRandomInt(MIN_NUMBER_OF_ELEMENTS, arr.length));
+  return elements.slice(0, getRandomInt(MIN_NUMBER_OF_ELEMENTS, elements.length));
 };
 
 const showListElements = (list, cb) => {

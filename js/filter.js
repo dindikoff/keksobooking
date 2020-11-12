@@ -37,7 +37,7 @@ const getStringValue = (value) => {
 };
 
 const getIntegerValue = (value) => {
-  return parseInt(value);
+  return parseInt(value, 10);
 };
 
 const Filters = {
@@ -79,6 +79,22 @@ const getInfo = (data) => {
     });
   };
 
+  const filterByFeatures = (ads) => {
+    const featureList = [...mapFeatures].filter((feature) => {
+      return feature.checked;
+    }).map((feature) => {
+      return feature.value;
+    });
+
+    return ads.filter((ad) => {
+      if (window.utils.contains(ad.offer.features, featureList)) {
+        return ad;
+      }
+      return null;
+    });
+
+  };
+
   window.pin.renderAll(window.advertisements);
 
   const onUpdate = window.debounce(() => {
@@ -87,6 +103,7 @@ const getInfo = (data) => {
     window.advertisements = filterByValue(houseRooms.value, `rooms`);
     window.advertisements = filterByValue(houseGuest.value, `guests`);
     window.advertisements = filterByValue(housePrice.value, `price`);
+    window.advertisements = filterByFeatures(window.advertisements);
 
     window.card.delete();
     window.debounce(window.pin.renderAll(window.advertisements));

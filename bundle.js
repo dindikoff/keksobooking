@@ -24,17 +24,17 @@ const getRandomInt = (min = 0, max = 100) => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-const getRandomElement = (arr) => {
-  return arr[getRandomInt(0, arr.length)];
+const getRandomElement = (elements) => {
+  return elements[getRandomInt(0, elements.length)];
 };
 
 const getRandomLocation = (pinElement, field) => {
   return getRandomInt(pinElement.width / 2, field.clientWidth - (pinElement.width / 2));
 };
 
-const getRandomLengthString = (arr) => {
+const getRandomLengthString = (elements) => {
   const MIN_NUMBER_OF_ELEMENTS = 1;
-  return arr.slice(0, getRandomInt(MIN_NUMBER_OF_ELEMENTS, arr.length));
+  return elements.slice(0, getRandomInt(MIN_NUMBER_OF_ELEMENTS, elements.length));
 };
 
 const showListElements = (list, cb) => {
@@ -260,8 +260,8 @@ const resetFileInputs = () => {
   adPictureImage.style.backgroundImage = ``;
 };
 
-const onChangePicture = (inputEl, cb) => {
-  const file = inputEl.files[0];
+const onChangePicture = (inputElement, cb) => {
+  const file = inputElement.files[0];
   const fileName = file.name.toLowerCase();
 
   const matches = window.utils.isWordEndings(FILE_TYPES, fileName);
@@ -838,7 +838,7 @@ const getStringValue = (value) => {
 };
 
 const getIntegerValue = (value) => {
-  return parseInt(value);
+  return parseInt(value, 10);
 };
 
 const Filters = {
@@ -876,10 +876,24 @@ const getInfo = (data) => {
     }
 
     return window.advertisements.filter((pin) => {
-      console.log(Filters[field].getAdValue(pin.offer[field]));
-      console.log(Filters[field].getFilterValue(10));
       return Filters[field].getAdValue(pin.offer[field]) === Filters[field].getFilterValue(value);
     });
+  };
+
+  const filterByFeatures = (ads) => {
+    const featureList = [...mapFeatures].filter((feature) => {
+      return feature.checked;
+    }).map((feature) => {
+      return feature.value;
+    });
+
+    return ads.filter((ad) => {
+      if (window.utils.contains(ad.offer.features, featureList)) {
+        return ad;
+      }
+      return null;
+    });
+
   };
 
   window.pin.renderAll(window.advertisements);
@@ -890,6 +904,7 @@ const getInfo = (data) => {
     window.advertisements = filterByValue(houseRooms.value, `rooms`);
     window.advertisements = filterByValue(houseGuest.value, `guests`);
     window.advertisements = filterByValue(housePrice.value, `price`);
+    window.advertisements = filterByFeatures(window.advertisements);
 
     window.card.delete();
     window.debounce(window.pin.renderAll(window.advertisements));

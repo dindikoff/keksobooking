@@ -87,10 +87,7 @@ const getInfo = (data) => {
     });
 
     return ads.filter((ad) => {
-      if (window.utils.contains(ad.offer.features, featureList)) {
-        return ad;
-      }
-      return null;
+      return window.utils.contains(ad.offer.features, featureList);
     });
 
   };
